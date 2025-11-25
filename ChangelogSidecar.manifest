@@ -1,0 +1,14 @@
+{
+	"autodeskProduct":	"Fusion",
+	"type":	"addin",
+	"id":	"8262b910-ef34-423e-8d5a-e985fc758ade",
+	"author":	"Ed Johnson",
+	"description":	{
+		"":	"A simple, lightweight changelog and milestone utility that keeps your log data with your Fusion designs.\n\nMaintains a persistent interface with a live dashboard 'sidecar'.\n\nby Ed Johnson ('Making With An EdJ')."
+	},
+	"version":	"1.0.0",
+	"runOnStartup":	true,
+	"supportedOS":	"windows|mac",
+	"editEnabled":	true,
+	"iconFilename": "ChangelogSidecarAppIcon.png"
+}

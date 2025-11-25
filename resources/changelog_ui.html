@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* CSS VARIABLES (Light Mode Default) */
+        :root {
+            --bg-body: #f0f0f0;
+            --bg-section: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #555555;
+            --border-color: #cccccc;
+            --input-bg: #ffffff;
+            --input-text: #333333;
+            --button-primary: #007bff;
+            --button-primary-hover: #0056b3;
+            --button-secondary: #6c757d;
+            --button-secondary-hover: #5a6268;
+            --toggle-bg: #ccc;
+            --toggle-active: #4cc9f0;
+        }
+
+        /* DARK MODE OVERRIDES */
+        [data-theme="dark"] {
+            --bg-body: #2b2b2b;        /* Fusion Palette Dark Gray */
+            --bg-section: #3a3a3a;     /* Slightly lighter for input areas */
+            --text-primary: #e0e0e0;   /* Soft White */
+            --text-secondary: #aaaaaa; 
+            --border-color: #555555;
+            --input-bg: #222222;       /* Dark input fields */
+            --input-text: #eeeeee;
+            --button-primary: #0069d9; /* Slightly darker blue to reduce glare */
+            --button-primary-hover: #0056b3;
+            --button-secondary: #5a6268;
+            --button-secondary-hover: #4e555b;
+            --toggle-bg: #555;
+            --toggle-active: #00a8cc;
+        }
+
+        body { 
+            font-family: sans-serif; 
+            padding: 10px; 
+            font-size: 14px; 
+            background-color: var(--bg-body); 
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s; 
+        }
+        
+        /* HEADER & TOGGLE */
+        .header-row { display: flex; justify-content: flex-end; margin-bottom: 10px; align-items: center; }
+        
+        /* Input Area */
+        textarea { 
+            width: 100%; 
+            height: 100px; 
+            box-sizing: border-box; 
+            margin-bottom: 10px; 
+            border: 1px solid var(--border-color); 
+            border-radius: 4px; 
+            padding: 8px; 
+            font-family: inherit;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+        }
+        
+        input[type="text"] {
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Buttons */
+        button { padding: 10px; width: 100%; cursor: pointer; background: var(--button-primary); color: white; border: none; border-radius: 4px; margin-bottom: 5px; font-weight: bold; font-size: 14px; transition: background 0.2s; }
+        button:hover { background: var(--button-primary-hover); }
+        
+        button.secondary { background: var(--button-secondary); font-size: 12px; padding: 8px; }
+        button.secondary:hover { background: var(--button-secondary-hover); }
+        
+        button.view-log { background: #28a745; margin-bottom: 15px; border-bottom: 3px solid #1e7e34; }
+        button.view-log:hover { background: #218838; }
+
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--text-secondary); }
+        hr { border: 0; border-top: 1px solid var(--border-color); margin: 15px 0; }
+        h4 { margin: 5px 0 10px 0; color: var(--text-primary); }
+        
+        .section-box { 
+            background: var(--bg-section); 
+            padding: 10px; 
+            border-radius: 5px; 
+            border: 1px solid var(--border-color); 
+            margin-bottom: 10px; 
+        }
+
+        /* TOGGLE SWITCH CSS */
+        .theme-switch-wrapper { display: flex; align-items: center; }
+        .theme-switch { position: relative; display: inline-block; width: 34px; height: 18px; margin-right: 8px; }
+        .theme-switch input { display:none; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--toggle-bg); transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--toggle-active); }
+        input:checked + .slider:before { transform: translateX(16px); }
+        .toggle-label { font-size: 11px; color: var(--text-secondary); font-weight: bold; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header-row">
+        <div class="theme-switch-wrapper">
+            <label class="theme-switch" for="theme-checkbox">
+                <input type="checkbox" id="theme-checkbox" />
+                <div class="slider"></div>
+            </label>
+            <span class="toggle-label">Dark Mode</span>
+        </div>
+    </div>
+
+    <button class="view-log" onclick="openDashboard()">📂 OPEN LOG DASHBOARD</button>
+
+    <div class="section-box">
+        <label>Add Log Entry:</label>
+        <textarea id="newEntryText" placeholder="What did you change?"></textarea>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div>
+                <input type="checkbox" id="autosaveCheck" checked> <label for="autosaveCheck" style="display:inline; font-weight:normal; cursor:pointer;">Autosave Design</label>
+            </div>
+        </div>
+        <button onclick="sendEntry()">Save Entry</button>
+    </div>
+
+    <div style="margin-top:20px;">
+        <h4 style="font-size:12px; text-transform:uppercase; color:var(--text-secondary);">Utilities</h4>
+        
+        <div style="margin-bottom: 10px;">
+            <input type="text" id="milestoneReason" placeholder="Milestone Name (e.g. 'Final Draft')" style="width:100%; margin-bottom:5px; padding:6px; box-sizing:border-box;">
+            <button class="secondary" onclick="createMilestone()">Archive & Start New Log</button>
+        </div>
+
+        <button class="secondary" onclick="exportLog()">Export to Text File</button>
+    </div>
+
+    <script>
+        // --- BRIDGE LOGIC ---
+        function sendToFusion(action, data = {}) {
+            const args = { action: action, ...data };
+            if (window.adsk) {
+                window.adsk.fusionSendData('message', JSON.stringify(args));
+            }
+        }
+
+        function openDashboard() { sendToFusion('refresh'); }
+
+        function sendEntry() {
+            const text = document.getElementById('newEntryText').value;
+            const autosave = document.getElementById('autosaveCheck').checked;
+            if(!text) return;
+            sendToFusion('add_entry', { note: text, autosave: autosave });
+            document.getElementById('newEntryText').value = ""; 
+        }
+
+        function createMilestone() {
+            const reason = document.getElementById('milestoneReason').value;
+            if(!reason) return alert("Please enter a reason.");
+            sendToFusion('create_milestone', { reason: reason });
+            document.getElementById('milestoneReason').value = "";
+        }
+
+        function exportLog() { sendToFusion('export_log'); }
+
+        // --- THEME LOGIC ---
+        // 1. Check for saved theme immediately
+        const toggleSwitch = document.getElementById('theme-checkbox');
+        const currentTheme = localStorage.getItem('paletteTheme');
+
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            if (currentTheme === 'dark') {
+                toggleSwitch.checked = true;
+            }
+        }
+
+        // 2. Handle Toggle Switch
+        toggleSwitch.addEventListener('change', function(e) {
+            if (e.target.checked) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('paletteTheme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('paletteTheme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>
