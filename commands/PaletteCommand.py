@@ -19,7 +19,131 @@ app = adsk.core.Application.get()
 ui = app.userInterface
 
 _palette = None
-_handlers = [] 
+_handlers = []
+
+def _read_manifest_version():
+    manifest_path = os.path.join(root_dir, 'ChangelogSidecar.manifest')
+    try:
+        with open(manifest_path, 'r', encoding='utf-8') as f:
+            return json.load(f).get('version', '')
+    except Exception:
+        return ''
+
+ADDIN_VERSION = _read_manifest_version()
+
+# Host-side store for user-imported themes -- separate from the built-in
+# Light/Dark/Sepia themes baked into changelog_ui.html. Per-machine, gitignored
+# (same pattern as LiveUtilities/GridfinityGeneratorPlus's imported_themes.json):
+# survives a restart or a localStorage wipe.
+IMPORTED_THEMES_PATH = os.path.join(root_dir, 'imported_themes.json')
+
+def load_imported_themes():
+    if not os.path.exists(IMPORTED_THEMES_PATH):
+        return {}
+    try:
+        with open(IMPORTED_THEMES_PATH, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+def save_imported_theme(theme_id, theme_vars):
+    themes = load_imported_themes()
+    themes[theme_id] = theme_vars
+    with open(IMPORTED_THEMES_PATH, 'w', encoding='utf-8') as f:
+        json.dump(themes, f, indent=2)
+
+def delete_imported_theme(theme_id):
+    themes = load_imported_themes()
+    if theme_id in themes:
+        del themes[theme_id]
+        with open(IMPORTED_THEMES_PATH, 'w', encoding='utf-8') as f:
+            json.dump(themes, f, indent=2)
+
+def clear_imported_themes():
+    """Used by Factory Reset Theme Cache -- wipes every host-persisted
+    imported theme, not just localStorage, so a reset actually resets."""
+    if os.path.exists(IMPORTED_THEMES_PATH):
+        os.remove(IMPORTED_THEMES_PATH)
+
+def _themes_dialog_dir():
+    themes_dir = os.path.join(root_dir, 'resources', 'themes')
+    return themes_dir if os.path.isdir(themes_dir) else os.path.join(root_dir, 'resources')
+
+# General-purpose host-side settings file (palette geometry, and anything
+# else added later). Per-machine, gitignored -- separate from
+# imported_themes.json, which is theme-import-specific.
+CONFIG_PATH = os.path.join(root_dir, 'config.json')
+
+def _load_config():
+    try:
+        with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+def _save_config(updates):
+    config_data = _load_config()
+    config_data.update(updates)
+    try:
+        with open(CONFIG_PATH, 'w', encoding='utf-8') as f:
+            json.dump(config_data, f, indent=2)
+    except OSError:
+        pass
+
+def _save_palette_geometry(palette):
+    # Fusion's Palette has no resize/move event -- width/height/left/top/
+    # dockingState are only readable on demand, so this is called at the two
+    # points the palette's lifecycle actually gives us: the user closing it
+    # and the add-in being stopped (right before palette.deleteMe()).
+    try:
+        _save_config({'palette_geometry': {
+            'width': palette.width,
+            'height': palette.height,
+            'left': palette.left,
+            'top': palette.top,
+            'docking_state': int(palette.dockingState),
+        }})
+    except RuntimeError:
+        pass
+
+def _restore_palette_geometry(palette):
+    geometry = _load_config().get('palette_geometry', {})
+    try:
+        if 'left' in geometry:
+            palette.left = geometry['left']
+        if 'top' in geometry:
+            palette.top = geometry['top']
+        if 'docking_state' in geometry:
+            palette.dockingState = geometry['docking_state']
+    except RuntimeError:
+        pass
+
+def export_theme_logic(content, default_name):
+    fileDialog = ui.createFileDialog()
+    fileDialog.title = 'Export Theme'
+    fileDialog.filter = 'JSON Files (*.json);;All Files (*.*)'
+    fileDialog.initialDirectory = _themes_dialog_dir()
+    fileDialog.initialFilename = default_name
+    if fileDialog.showSave() == adsk.core.DialogResults.DialogOK:
+        try:
+            with open(fileDialog.filename, 'w', encoding='utf-8') as f:
+                f.write(content)
+            ui.messageBox(f'Theme exported to {fileDialog.filename}')
+        except Exception as e:
+            ui.messageBox(f'Failed to save theme:\n{str(e)}')
+
+def import_theme_logic():
+    fileDialog = ui.createFileDialog()
+    fileDialog.title = 'Import Theme'
+    fileDialog.filter = 'JSON Files (*.json);;All Files (*.*)'
+    fileDialog.initialDirectory = _themes_dialog_dir()
+    if fileDialog.showOpen() == adsk.core.DialogResults.DialogOK:
+        try:
+            with open(fileDialog.filename, 'r', encoding='utf-8') as f:
+                return f.read()
+        except Exception as e:
+            ui.messageBox(f'Failed to read theme:\n{str(e)}')
+    return None
 
 def log_to_console(msg):
     try:
@@ -51,6 +175,7 @@ def stop():
     global _palette
     palette = ui.palettes.itemById(config.PALETTE_ID)
     if palette:
+        _save_palette_geometry(palette)
         palette.deleteMe()
         _palette = None
     cmdDef = ui.commandDefinitions.itemById(config.SHOW_EDIT_COMMAND_ID)
@@ -67,6 +192,14 @@ class DocEventsHandler(adsk.core.DocumentEventHandler):
             generate_and_open_report(open_browser=False)
         except:
             pass
+
+class PaletteClosedHandler(adsk.core.UserInterfaceGeneralEventHandler):
+    def __init__(self):
+        super().__init__()
+    def notify(self, args):
+        palette = ui.palettes.itemById(config.PALETTE_ID)
+        if palette:
+            _save_palette_geometry(palette)
 
 # --- 1. SHOW PALETTE HANDLER ---
 class ShowPaletteHandler(adsk.core.CommandCreatedEventHandler):
@@ -86,18 +219,27 @@ class ShowPaletteHandler(adsk.core.CommandCreatedEventHandler):
             url = html_file.as_uri()
 
             _palette = ui.palettes.itemById(config.PALETTE_ID)
-            
+
             if not _palette:
+                geometry = _load_config().get('palette_geometry', {})
+                width = geometry.get('width', 300)
+                height = geometry.get('height', 350)
+
                 _palette = ui.palettes.add(
-                    config.PALETTE_ID, 
-                    config.PALETTE_NAME, 
-                    url, 
-                    True, True, True, 300, 350
+                    config.PALETTE_ID,
+                    config.PALETTE_NAME,
+                    url,
+                    True, True, True, width, height
                 )
                 _palette.dockingState = adsk.core.PaletteDockingStates.PaletteDockStateRight
+                _restore_palette_geometry(_palette)
                 onHtmlEvent = PaletteHtmlEventHandler()
                 _palette.incomingFromHTML.add(onHtmlEvent)
                 _handlers.append(onHtmlEvent)
+
+                onClose = PaletteClosedHandler()
+                _palette.closed.add(onClose)
+                _handlers.append(onClose)
             else:
                 _palette.htmlFileURL = url
 
@@ -122,13 +264,42 @@ class PaletteHtmlEventHandler(adsk.core.HTMLEventHandler):
             elif action == 'add_entry':
                 add_entry_logic(htmlArgs.get('note'), htmlArgs.get('autosave'))
                 adsk.doEvents()
-                generate_and_open_report(open_browser=False) 
+                generate_and_open_report(open_browser=False)
             elif action == 'create_milestone':
                 create_milestone_logic(htmlArgs.get('reason'))
                 adsk.doEvents()
                 generate_and_open_report(open_browser=False)
             elif action == 'export_log':
                 export_log_logic()
+
+            elif action == 'get_init_data':
+                if _palette:
+                    _palette.sendInfoToHTML('init_data', json.dumps({
+                        'addin_version': ADDIN_VERSION,
+                        'imported_themes': load_imported_themes()
+                    }))
+
+            elif action == 'export_theme':
+                export_theme_logic(htmlArgs.get('content'), htmlArgs.get('default_name'))
+
+            elif action == 'import_theme':
+                content = import_theme_logic()
+                if content and _palette:
+                    _palette.sendInfoToHTML('theme_imported', json.dumps({'content': content}))
+
+            elif action == 'save_imported_theme':
+                theme_id = htmlArgs.get('id')
+                theme_vars = htmlArgs.get('vars')
+                if theme_id and isinstance(theme_vars, dict):
+                    save_imported_theme(theme_id, theme_vars)
+
+            elif action == 'remove_imported_theme':
+                theme_id = htmlArgs.get('id')
+                if theme_id:
+                    delete_imported_theme(theme_id)
+
+            elif action == 'reset_imported_themes':
+                clear_imported_themes()
         except:
             log_to_console('Handler Error:\n{}'.format(traceback.format_exc()))
 
