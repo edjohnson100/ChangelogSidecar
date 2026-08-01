@@ -1,7 +1,11 @@
 # Changelog Sidecar
+**Version:** 1.2.0
+
+**Author:** Ed Johnson (Making With An EdJ)
+
 **A persistent design journal for Autodesk Fusion.**
 
-![Changelog Sidecar Icon](resources/AppIconHorizontal.png)
+<img src="ChangelogSidecarAppIcon.png" alt="App Icon" width="300">
 
 ## Introduction: The "Why" and "What"
 
@@ -11,45 +15,56 @@ Fusion’s built-in version comments are great for the "What," but they don't gi
 
 **Changelog Sidecar** is a simple, lightweight utility designed to solve this problem. It provides a dedicated space to log your thoughts, decisions, and milestones directly inside your design file.
 
-* **Persistent Interface:** A non-intrusive palette window stays open while you work.
+* **Persistent Interface:** A non-intrusive palette window stays open while you work, and now remembers its size, position, and docking state between Fusion sessions.
 * **Live Dashboard (The Sidecar):** View your entire project history in a clean, auto-refreshing web dashboard on your second monitor.
 * **Data Locality:** Your logs are stored as attributes *inside* the Fusion design file. If you share the file, the history travels with it. *(Note: The recipient must also have Changelog Sidecar installed to view the history).*
 
+---
+## ✨ What's New in v1.2.0
+
+* **Theme Manager:** Swap the old dark-mode toggle for a full Light/Dark/Sepia dropdown, with `.theme.json` import/export and a handful of ready-made presets to try.
+* **The palette remembers where you left it:** Size, position, and docking state now persist across Fusion restarts.
+* **Simpler installs:** Distribution moved from built installer packages to a plain zip download — see Installation below.
+
+*For older release notes, please see the **[CHANGELOG](CHANGELOG.md)**.*
+
 ## Installation
 
-### Windows Users
-1.  **Download:** Download the latest installer (`ChangelogSidecar_Win.exe` or `.msi`).
-2.  **Install:** Double-click the installer to run it.
-    * *Note: If Windows protects your PC saying "Unknown Publisher," click **More Info** → **Run Anyway**. (I'm an indie developer, not a giant corporation!)*
-3.  **Restart:** If Fusion is open, restart it to load the new add-in.
+### Manual Installation Options
 
-### Mac Users
-1.  **Download:** Download the latest package (`ChangelogSidecar_Mac.pkg`).
-2.  **Install:** Double-click the package to run the installer.
-    * *Note: If macOS prevents the install, Right-Click the file and choose **Open**, then click **Open** again in the dialog box.*
-3.  **Restart:** If Fusion is open, restart it to load the new add-in.
+This add-in requires a quick manual installation. You can choose to install it in Fusion's default directory or a custom folder of your choice.
 
-### Verify Installation
-Once installed, **Changelog Sidecar** should start automatically.
+#### Option 1: Install in the Default Fusion Directory
+1. **Download:** Download the source code as a ZIP file and extract the `ChangelogSidecar-main` folder. Rename the folder to `ChangelogSidecar` (remove the `-main` suffix) — Fusion requires the folder name to match the add-in name exactly, so it won't run correctly if you skip this step.
+Download the zip file using the green `Code` button above or simply click this link: [ChangelogSidecar Main Branch](https://github.com/edjohnson100/ChangelogSidecar/archive/refs/heads/main.zip)
+2. **Move the Folder:** Move the entire `ChangelogSidecar` folder into your native Fusion Add-Ins directory:
+   * **Windows:** `%appdata%\Autodesk\Autodesk Fusion 360\API\Addins`
+   * **Mac:** `~/Library/Application Support/Autodesk/Autodesk Fusion 360/API/Addins`
+3. **Open Fusion:** Press `Shift + S` to open the **Scripts and Add-Ins** dialog.
+4. **Run the Add-in:** Make sure the **Add-ins** filter checkbox is checked. You should see **Changelog Sidecar** in the list of add-ins. You may want to check the 'Run on startup' option so it automatically runs when Fusion starts. Click the **Run** icon to execute the add-in.
 
-1.  Open Fusion.
-2.  Look for the **Changelog Sidecar** icon in the **Utilities** tab or the **Solid > Insert** panel.
-3.  If you don't see it:
-    * Press `Shift+S` to open **Scripts and Add-Ins**.
-    * Make sure the **Add-Ins** box is checked.
-    * Find "Changelog Sidecar" in the list and ensure **Run on Startup** is checked.
-    * Click **Run**.
+#### Option 2: Install in a Custom Directory
+1. **Download:** Download the source code as a ZIP file and extract the `ChangelogSidecar` folder. Rename the folder to `ChangelogSidecar`.
+2. **Organize:** Create a dedicated folder on your computer for your Fusion tools (e.g., `Documents\Fusion_Tools`) and move the `ChangelogSidecar` folder inside it (remove the `-main` suffix) — Fusion requires the folder name to match the add-in name exactly, so it won't run correctly if you skip this step.
+3. **Open Fusion:** Press `Shift + S` to open the **Scripts and Add-Ins** dialog.
+4. **Add the Add-in:** Click the grey **"+"** icon next to the search box at the top of the dialog and select **Script or add-in from device**.
+5. **Locate:** Navigate to your custom folder, select the `ChangelogSidecar` folder, and click **Select Folder**.
+6. **Run the Add-in:** Make sure the **Add-ins** filter checkbox is checked. You should see **Changelog Sidecar** in the list of add-ins. You may want to check the 'Run on startup' option so it automatically runs when Fusion starts. Click the **Run** icon to execute the add-in.
 
 ## Using Changelog Sidecar
 
 ### The Input Palette (Controller)
-When you click the **Changelog Sidecar** command, a palette window opens. This is your "Controller." You can dock it to the side of your screen or leave it floating.
+When you click the **Changelog Sidecar** command, a palette window opens. This is your "Controller." You can dock it to the side of your screen or leave it floating — it'll remember where you put it.
 
 * **Open Log Dashboard:** Launches the "Sidecar"—a browser window that displays your full history.
-* **Dark Mode Toggle:** Located in the top-right corner. Use this to switch the palette interface between light and dark themes to match your Fusion environment.
+* **Theme Manager:** Located at the top of the palette. Pick **Light**, **Dark**, or **Sepia** from the dropdown, or build your own:
+    * **Import (⬆) / Export (⬇):** Load a `.theme.json` file someone shared with you, or export your current theme (built-in or custom) to share or back up.
+    * **Remove Selected Theme (✕):** Deletes an imported custom theme. Only enabled when a custom theme is selected—the built-in Light/Dark/Sepia themes can't be removed.
+    * **Factory Reset Theme Cache:** Wipes all imported custom themes and reverts to Light, in case things get cluttered.
+    * A handful of ready-made presets (Classic Light/Dark, EdJ Dark, Gruvbox Light, Hacker, Hot Pink) ship in `resources/themes/`—import any of them to try a look before designing your own.
 * **New Entry:** Type your notes here. Be verbose! Explain *why* you are making changes.
     * **Autosave Design Checkbox:** Checked by default. When checked, adding an entry will automatically save the current Fusion design (creating a new version) to ensure the log is permanently attached.
-    * *Bypassing Autosave:* Uncheck this box if you want to log a note without triggering a version save immediately. Your note is still attached to the file session and will be permanently committed the next time you save the design manually or loag another entry with autosave turned on.
+    * *Bypassing Autosave:* Uncheck this box if you want to log a note without triggering a version save immediately. Your note is still attached to the file session and will be permanently committed the next time you save the design manually or log another entry with autosave turned on.
 * **Utilities:**
     * **Create Milestone:** Use this when you reach a major turning point (e.g., "Prototype 1 Complete"). It archives the current active log into a history block with a ***Milestone*** header and starts a fresh active log.
     * **Export:** Saves your entire history (Active + Milestones) to a `.txt` file on your computer.
@@ -76,20 +91,19 @@ For the fellow coders and makers out there, here is how Changelog Sidecar was bu
 
 * **Developer:** Ed Johnson ([Making With An EdJ](https://www.youtube.com/@makingwithanedj))
 * **AI Assistance:** Developed with coding assistance from Google's Gemini 3 Pro model.
-* **
 * **Icons:** "Lucy in the Sidecar" artwork generated via [Artistly](https://artistly.ai/).
-* **Installers:** Built using the **WiX Toolset** (Windows) and standard **macOS Packaging Tools**.
-* **Lucy (The Cavachon Puppy):**  
+* **Lucy (The Cavachon Puppy):**
 ***Chief Wellness Officer & Director of Mandatory Breaks***
     * Thank you for ensuring I maintained healthy circulation by interrupting my deep coding sessions with urgent requests for play.
 * **License:** Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
 
 ---
 
-## Support the Maker (and Lucy!)
+## ❤️ Support the Maker (and Lucy!)
 
-I develop these tools to improve my own parametric workflows and love sharing them with the community. If you find LiveUtilities useful and want to say thanks, feel free to **[buy Lucy a dog treat on Ko-fi](https://ko-fi.com/makingwithanedj)**! This is completely optional and supports my Chief Wellness Officer in maintaining mandatory play breaks. Your appreciation and feedback are more than enough.
+I develop these tools to improve my own workflows and love sharing them with the community. If you find Changelog Sidecar useful and want to say thanks, feel free to **[buy Lucy a dog treat on Ko-fi](https://ko-fi.com/makingwithanedj)**!
 
 ***
+
 *Happy Making!*
 *— EdJ*

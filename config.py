@@ -54,6 +54,8 @@ SHOW_EDIT_COMMAND_ID = f'{COMPANY_NAME}_{ADDIN_NAME}_ShowChangelog'
 SHOW_EDIT_COMMAND_NAME = 'Changelog Sidecar'
 # Point directly to the resources root for icons
 SHOW_EDIT_RESOURCE_FOLDER = get_resource_folder()
-SHOW_EDIT_COMMAND_TOOLTIP = 'Opens the Changelog Sidecar command dialog.'
-SHOW_EDIT_TOOLCLIP_FILENAME = 'resources/AppIconHorizontal.png'
-
+SHOW_EDIT_COMMAND_TOOLTIP = 'Persistent changelog and milestone utility for tracking design history. Includes a live *Sidecar* browser dashboard with auto-refresh, milestone creation, and text export.'
+# Must be absolute -- unlike resourceFolder, toolClipFilename gets no special
+# relative-path handling from the Fusion API and is resolved against
+# Fusion's process working directory, not the add-in's own folder.
+SHOW_EDIT_TOOLCLIP_FILENAME = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'resources', 'toolClip.png')

@@ -1,61 +1,117 @@
-/* CSS VARIABLES (Light Mode Default) */
+/* CSS VARIABLES (Light Mode Default)
+   Standardized variable schema shared across EdJ's palette-based add-ins --
+   keep names/roles in sync with resources/themes/*.theme.json so imported
+   themes reskin every themed element, not just a partial subset. */
 :root {
+    --font-family: 'Segoe UI', Tahoma, sans-serif;
+    --font-size-base: 14px;
     --bg-body: #f0f0f0;
-    --bg-section: #ffffff;
-    --text-primary: #333333;
-    --text-secondary: #555555;
+    --text-main: #333333;
+    --text-sub: #555555;
     --border-color: #cccccc;
+    --row-bg: #ffffff;
+    --row-border: #cccccc;
+    --row-hover: #e8e8e8;
     --input-bg: #ffffff;
+    --input-border: #cccccc;
     --input-text: #333333;
-    --button-primary: #007bff;
-    --button-primary-hover: #0056b3;
-    --button-secondary: #6c757d;
-    --button-secondary-hover: #5a6268;
+    --input-placeholder: #999999;
     --toggle-bg: #ccc;
-    --toggle-active: #4cc9f0;
+    --header-hover: #e8e8e8;
+    --tab-bg: #e0e0e0;
+    --tab-active-bg: #ffffff;
+    --tab-text: #666666;
+    --tab-active-text: #007bff;
+    --btn-primary: #007bff;
+    --btn-primary-hover: #0056b3;
+    --btn-success: #28a745;
+    --btn-success-hover: #218838;
+    --btn-secondary: #6c757d;
+    --btn-secondary-hover: #5a6268;
+    --btn-secondary-text: #ffffff;
+    --status-success-bg: #d4edda;
+    --status-success-text: #155724;
+    --status-error-bg: #f8d7da;
+    --status-error-text: #721c24;
+    --status-info-bg: #cce5ff;
+    --status-info-text: #004085;
 }
 
 /* DARK MODE OVERRIDES */
 [data-theme="dark"] {
     --bg-body: #2b2b2b;        /* Fusion Palette Dark Gray */
-    --bg-section: #3a3a3a;     /* Slightly lighter for input areas */
-    --text-primary: #e0e0e0;   /* Soft White */
-    --text-secondary: #aaaaaa;
+    --row-bg: #3a3a3a;         /* Slightly lighter for input areas */
+    --text-main: #e0e0e0;      /* Soft White */
+    --text-sub: #aaaaaa;
     --border-color: #555555;
+    --row-border: #555555;
+    --row-hover: #333333;
     --input-bg: #222222;       /* Dark input fields */
+    --input-border: #666666;
     --input-text: #eeeeee;
-    --button-primary: #0069d9; /* Slightly darker blue to reduce glare */
-    --button-primary-hover: #0056b3;
-    --button-secondary: #5a6268;
-    --button-secondary-hover: #4e555b;
+    --input-placeholder: #888888;
     --toggle-bg: #555;
-    --toggle-active: #00a8cc;
+    --header-hover: #333333;
+    --tab-bg: #1a1a1a;
+    --tab-active-bg: #3a3a3a;
+    --tab-text: #aaaaaa;
+    --tab-active-text: #4cc9f0;
+    --btn-primary: #0069d9;    /* Slightly darker blue to reduce glare */
+    --btn-primary-hover: #0056b3;
+    --btn-success: #1e7e34;
+    --btn-success-hover: #155724;
+    --btn-secondary: #5a6268;
+    --btn-secondary-hover: #4e555b;
+    --btn-secondary-text: #ffffff;
+    --status-success-bg: #1e4620;
+    --status-success-text: #d4edda;
+    --status-error-bg: #4c1d1d;
+    --status-error-text: #f8d7da;
+    --status-info-bg: #1d364d;
+    --status-info-text: #cce5ff;
 }
 
 /* SEPIA OVERRIDES */
 [data-theme="sepia"] {
     --bg-body: #f4ecd8;
-    --bg-section: #fbf5e6;
-    --text-primary: #5b4636;
-    --text-secondary: #8a6d55;
+    --row-bg: #fbf5e6;
+    --text-main: #5b4636;
+    --text-sub: #8a6d55;
     --border-color: #d8c8a8;
+    --row-border: #d8c8a8;
+    --row-hover: #f0e6cc;
     --input-bg: #fffaf0;
+    --input-border: #d8c8a8;
     --input-text: #5b4636;
-    --button-primary: #a9702f;
-    --button-primary-hover: #8c5a22;
-    --button-secondary: #c9b48c;
-    --button-secondary-hover: #b8a179;
+    --input-placeholder: #b8a179;
     --toggle-bg: #d8c8a8;
-    --toggle-active: #a9702f;
+    --header-hover: #f0e6cc;
+    --tab-bg: #ead9b8;
+    --tab-active-bg: #fbf5e6;
+    --tab-text: #8a6d55;
+    --tab-active-text: #a9702f;
+    --btn-primary: #a9702f;
+    --btn-primary-hover: #8c5a22;
+    --btn-success: #6b7d3d;
+    --btn-success-hover: #566331;
+    --btn-secondary: #c9b48c;
+    --btn-secondary-hover: #b8a179;
+    --btn-secondary-text: #5b4636;
+    --status-success-bg: #e3ecd0;
+    --status-success-text: #4a5a2a;
+    --status-error-bg: #f0d8d0;
+    --status-error-text: #7a3527;
+    --status-info-bg: #dce6ee;
+    --status-info-text: #35526b;
 }
 
 body {
     min-height: 2160px;
-    font-family: sans-serif;
+    font-family: var(--font-family);
     padding: 10px;
-    font-size: 14px;
+    font-size: var(--font-size-base);
     background-color: var(--bg-body);
-    color: var(--text-primary);
+    color: var(--text-main);
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -68,45 +124,46 @@ textarea {
     height: 100px;
     box-sizing: border-box;
     margin-bottom: 10px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--input-border);
     border-radius: 4px;
     padding: 8px;
     font-family: inherit;
     background-color: var(--input-bg);
     color: var(--input-text);
 }
+textarea::placeholder, input[type="text"]::placeholder { color: var(--input-placeholder); }
 
 input[type="text"] {
     background-color: var(--input-bg);
     color: var(--input-text);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--input-border);
 }
 
 /* Buttons */
-button { padding: 10px; width: 100%; cursor: pointer; background: var(--button-primary); color: white; border: none; border-radius: 4px; margin-bottom: 5px; font-weight: bold; font-size: 14px; transition: background 0.2s; }
-button:hover { background: var(--button-primary-hover); }
+button { padding: 10px; width: 100%; cursor: pointer; background: var(--btn-primary); color: white; border: none; border-radius: 4px; margin-bottom: 5px; font-weight: bold; font-size: 14px; transition: background 0.2s; }
+button:hover { background: var(--btn-primary-hover); }
 
-button.secondary { background: var(--button-secondary); font-size: 12px; padding: 8px; }
-button.secondary:hover { background: var(--button-secondary-hover); }
+button.secondary { background: var(--btn-secondary); color: var(--btn-secondary-text); font-size: 12px; padding: 8px; }
+button.secondary:hover { background: var(--btn-secondary-hover); }
 
-button.view-log { background: #28a745; margin-bottom: 15px; border-bottom: 3px solid #1e7e34; }
-button.view-log:hover { background: #218838; }
+button.view-log { background: var(--btn-success); margin-bottom: 15px; border-bottom: 3px solid var(--btn-success-hover); }
+button.view-log:hover { background: var(--btn-success-hover); }
 
-label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--text-secondary); }
+label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--text-sub); }
 hr { border: 0; border-top: 1px solid var(--border-color); margin: 15px 0; }
-h4 { margin: 5px 0 10px 0; color: var(--text-primary); }
+h4 { margin: 5px 0 10px 0; color: var(--text-main); }
 
 .section-box {
-    background: var(--bg-section);
+    background: var(--row-bg);
     padding: 10px;
     border-radius: 5px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--row-border);
     margin-bottom: 10px;
 }
 
 /* HEADER / VERSION TAG */
-h2.app-title { margin: 0 0 10px 0; font-size: 16px; color: var(--text-primary); }
-.version-tag { font-size: 11px; font-weight: normal; color: var(--text-secondary); margin-left: 6px; }
+h2.app-title { margin: 0 0 10px 0; font-size: 16px; color: var(--text-main); }
+.version-tag { font-size: 11px; font-weight: normal; color: var(--text-sub); margin-left: 6px; }
 
 /* THEME MANAGER */
 .theme-manager-row { display: flex; gap: 6px; align-items: center; margin-bottom: 4px; }
@@ -115,17 +172,18 @@ h2.app-title { margin: 0 0 10px 0; font-size: 16px; color: var(--text-primary); 
     padding: 5px;
     background-color: var(--input-bg);
     color: var(--input-text);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--input-border);
     border-radius: 4px;
     font-size: 12px;
 }
 .icon-btn {
     width: 26px; height: 26px; padding: 0; margin: 0;
-    background: var(--button-secondary);
+    background: var(--btn-secondary);
+    color: var(--btn-secondary-text);
     font-size: 12px; font-weight: normal;
     border-radius: 4px;
 }
-.icon-btn:hover { background: var(--button-secondary-hover); }
+.icon-btn:hover { background: var(--btn-secondary-hover); }
 .icon-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .theme-reset-row { text-align: right; margin-bottom: 10px; }
-.factory-reset-link { font-size: 11px; color: var(--text-secondary); cursor: pointer; text-decoration: underline; }
+.factory-reset-link { font-size: 11px; color: var(--text-sub); cursor: pointer; text-decoration: underline; }

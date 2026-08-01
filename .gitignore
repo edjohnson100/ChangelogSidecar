@@ -35,31 +35,14 @@ imported_themes.json
 config.json
 
 # ----------------------
-# 4. Installer & Build Output (CRITICAL)
-# ----------------------
-# Ignore the folder where Inno Setup puts the compiled EXE
-Output/
-
-# ----------------------
-# 5. Security & Local Settings
+# 4. Security & Local Settings
 # ----------------------
 .env
 .env.*
 !.env.example
 
-# Allow the "Installers" folder itself...
-!Installers/
-
-# ...but ignore the specific binary files INSIDE it.
-Installers/*.exe
-Installers/*.msi
-Installers/*.pkg
-Installers/*.dmg
-Installers/*.zip
-Installers/*.wixpdb
-Installers/Output/
-
-# Ignore compiled binaries just in case they slip into other folders
+# Ignore compiled binaries/archives just in case they slip into other folders
+# (installer packaging was dropped in favor of zip-file releases)
 *.exe
 *.msi
 *.pkg

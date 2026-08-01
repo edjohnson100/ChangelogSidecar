@@ -27,12 +27,22 @@ function exportLog() { sendToFusion('export_log'); }
 
 // --- THEME MANAGER ---
 // Known CSS vars this UI themes -- used to snapshot the currently
-// active theme's resolved values for JSON export.
+// active theme's resolved values for JSON export. Kept in sync with the
+// standardized schema used across EdJ's palette-based add-ins and with
+// resources/themes/*.theme.json, so imported/exported themes are portable.
 const THEME_VARS = [
-    '--bg-body', '--bg-section', '--text-primary', '--text-secondary',
-    '--border-color', '--input-bg', '--input-text', '--button-primary',
-    '--button-primary-hover', '--button-secondary', '--button-secondary-hover',
-    '--toggle-bg', '--toggle-active'
+    '--font-family', '--font-size-base',
+    '--bg-body', '--text-main', '--text-sub', '--border-color',
+    '--row-bg', '--row-border', '--row-hover',
+    '--input-bg', '--input-border', '--input-text', '--input-placeholder',
+    '--toggle-bg', '--header-hover',
+    '--tab-bg', '--tab-active-bg', '--tab-text', '--tab-active-text',
+    '--btn-primary', '--btn-primary-hover',
+    '--btn-success', '--btn-success-hover',
+    '--btn-secondary', '--btn-secondary-hover', '--btn-secondary-text',
+    '--status-success-bg', '--status-success-text',
+    '--status-error-bg', '--status-error-text',
+    '--status-info-bg', '--status-info-text'
 ];
 const builtInThemeIds = new Set(['light', 'dark', 'sepia']);
 let customThemes = JSON.parse(localStorage.getItem('cls_custom_themes') || '{}');

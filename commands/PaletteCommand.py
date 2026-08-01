@@ -161,8 +161,13 @@ def start():
             config.SHOW_EDIT_COMMAND_TOOLTIP,
             config.SHOW_EDIT_RESOURCE_FOLDER
         )
-    # Set the advanced tooltip as a property
-    cmdDef.toolClipFilename = config.SHOW_EDIT_TOOLCLIP_FILENAME
+    # Set the advanced tooltip as a property. Non-fatal: a bad/incompatible
+    # toolclip image shouldn't take the whole command (and thus the palette)
+    # down with it.
+    try:
+        cmdDef.toolClipFilename = config.SHOW_EDIT_TOOLCLIP_FILENAME
+    except RuntimeError:
+        log_to_console('Failed to set toolClipFilename:\n{}'.format(traceback.format_exc()))
 
     futil.add_handler(cmdDef.commandCreated, ShowPaletteHandler)
     
@@ -318,77 +323,83 @@ def generate_and_open_report(open_browser=True):
     <style>
         :root {
             --bg-body: #f4f6f8;
-            --bg-container: #ffffff;
-            --text-primary: #333333;
-            --text-secondary: #6b778c;
+            --row-bg: #ffffff;
+            --text-main: #333333;
+            --text-sub: #6b778c;
             --header-border: #0052cc;
             --header-text: #172b4d;
             --milestone-bg: #ebecf0;
             --milestone-text: #172b4d;
-            --entry-border: #ebecf0;
+            --row-border: #ebecf0;
             --tag-bg: #e3fcef;
             --tag-text: #006644;
             --meta-text: #999999;
             --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --toggle-bg: #ccc;
+            --btn-primary: #007bff;
+            --status-error-text: #c0392b;
         }
 
         html[data-theme="dark"] {
             --bg-body: #1e1e1e;
-            --bg-container: #2d2d2d;
-            --text-primary: #e0e0e0;
-            --text-secondary: #a0a0a0;
+            --row-bg: #2d2d2d;
+            --text-main: #e0e0e0;
+            --text-sub: #a0a0a0;
             --header-border: #4cc9f0;
             --header-text: #ffffff;
             --milestone-bg: #3d3d3d;
             --milestone-text: #ffffff;
-            --entry-border: #444444;
+            --row-border: #444444;
             --tag-bg: #0f352e;
             --tag-text: #4cc9f0;
             --meta-text: #666666;
             --shadow: 0 4px 12px rgba(0,0,0,0.4);
+            --toggle-bg: #555;
+            --btn-primary: #0069d9;
+            --status-error-text: #ff6b6b;
         }
 
-        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 20px; background-color: var(--bg-body); color: var(--text-primary); line-height: 1.6; transition: background-color 0.3s; }
-        .container { max-width: 850px; margin: 0 auto; background: var(--bg-container); padding: 30px; border-radius: 8px; box-shadow: var(--shadow); position: relative; }
-        
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 20px; background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; transition: background-color 0.3s; }
+        .container { max-width: 850px; margin: 0 auto; background: var(--row-bg); padding: 30px; border-radius: 8px; box-shadow: var(--shadow); position: relative; }
+
         .header-row { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 15px; border-bottom: 3px solid var(--header-border); margin-bottom: 20px; }
         .title-block h1 { margin: 0; padding: 0; color: var(--header-text); font-size: 24px; border: none; }
-        
+
         .controls { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
 
         /* --- STYLED ACTIVE HEADER (NEW) --- */
-        h2 { 
+        h2 {
             background-color: var(--tag-bg);
             color: var(--tag-text);
-            padding: 10px 15px; 
-            border-radius: 4px; 
-            margin-top: 30px; 
-            margin-bottom: 15px; 
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-top: 30px;
+            margin-bottom: 15px;
             border-left: 5px solid var(--tag-text);
-            font-size: 18px; 
-            text-transform: uppercase; 
+            font-size: 18px;
+            text-transform: uppercase;
             letter-spacing: 0.5px;
             font-weight: bold;
         }
 
         .milestone-header { background-color: var(--milestone-bg); padding: 10px 15px; border-radius: 4px; margin-top: 30px; border-left: 5px solid var(--header-border); color: var(--milestone-text); font-weight: bold; }
-        .entry { padding: 12px 0; border-bottom: 1px solid var(--entry-border); }
+        .entry { padding: 12px 0; border-bottom: 1px solid var(--row-border); }
         .entry:last-child { border-bottom: none; }
-        .timestamp { font-size: 0.85em; color: var(--text-secondary); font-weight: 600; margin-bottom: 4px; }
-        .note { white-space: pre-wrap; color: var(--text-primary); }
-        .meta-info { font-size: 12px; color: var(--meta-text); text-align: right; margin-top: 20px; border-top: 1px solid var(--entry-border); padding-top: 10px; }
+        .timestamp { font-size: 0.85em; color: var(--text-sub); font-weight: 600; margin-bottom: 4px; }
+        .note { white-space: pre-wrap; color: var(--text-main); }
+        .meta-info { font-size: 12px; color: var(--meta-text); text-align: right; margin-top: 20px; border-top: 1px solid var(--row-border); padding-top: 10px; }
         .refresh-tag { display: inline-block; background: var(--tag-bg); color: var(--tag-text); padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold; vertical-align: middle; margin-left: 10px;}
-        .sync-time { font-size: 12px; color: var(--text-secondary); display: block; margin-top: 4px; }
+        .sync-time { font-size: 12px; color: var(--text-sub); display: block; margin-top: 4px; }
 
         .theme-switch-wrapper { display: flex; align-items: center; }
         .theme-switch { display: inline-block; height: 20px; position: relative; width: 40px; margin-right: 8px;}
         .theme-switch input { display:none; }
-        .slider { background-color: #ccc; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 34px; }
+        .slider { background-color: var(--toggle-bg); bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 34px; }
         .slider:before { background-color: #fff; bottom: 3px; content: ""; height: 14px; left: 3px; position: absolute; transition: .4s; width: 14px; border-radius: 50%; }
-        input:checked + .slider { background-color: #4cc9f0; }
+        input:checked + .slider { background-color: var(--btn-primary); }
         input:checked + .slider:before { transform: translateX(20px); }
-        .switch-label { font-size: 12px; color: var(--text-secondary); font-weight: bold; min-width: 70px; text-align: right;}
-        
+        .switch-label { font-size: 12px; color: var(--text-sub); font-weight: bold; min-width: 70px; text-align: right;}
+
         input[type=range] { width: 100px; margin-right: 8px; cursor: pointer; }
     </style>
     """
@@ -404,8 +415,8 @@ def generate_and_open_report(open_browser=True):
                 user = str(entry.get('user',''))
                 note = str(entry.get('note','')).replace('\n', '<br>')
                 active_html += f"<div class='entry'><div class='timestamp'>{ts} • {user}</div><div class='note'>{note}</div></div>"
-        except: active_html = "<p style='color:red'>Error reading active log.</p>"
-    else: active_html = "<p style='font-style:italic; color:#888'>No active entries. Add one to start tracking.</p>"
+        except: active_html = "<p style='color:var(--status-error-text)'>Error reading active log.</p>"
+    else: active_html = "<p style='font-style:italic; color:var(--meta-text)'>No active entries. Add one to start tracking.</p>"
 
     # READ ARCHIVES
     archive_html = ""
