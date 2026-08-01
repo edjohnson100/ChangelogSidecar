@@ -49,6 +49,7 @@ config.json
 *.dmg
 *.zip
 AGENTS.md
+CLAUDE.md
 
 # Personal reference dump (not shipped, not for review)
 Archive/
