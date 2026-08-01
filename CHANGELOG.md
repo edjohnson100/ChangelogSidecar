@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.1] - 2026-07-31
+
+### Fixed
+- The header version number could fail to appear if Fusion's HTML bridge wasn't ready the instant the palette script ran — there was no retry, so a slow-to-initialize bridge meant the tag stayed blank for the rest of that session. The startup request now retries (matching the pattern used elsewhere in the fleet) until the bridge is actually available.
+
 ## [1.2.0] - 2026-07-31
 
 ### Added
