@@ -148,11 +148,21 @@ applyThemeVars();
 themeSelector.value = builtInThemeIds.has(savedTheme) || (savedTheme in customThemes) ? savedTheme : 'light';
 changeTheme();
 
-// No get_init_data request here -- Python pushes 'init_data' proactively
-// right after the palette/handler is set up (see ShowPaletteHandler in
-// PaletteCommand.py), since window.adsk isn't guaranteed to exist the
-// instant this script runs and a one-shot HTML-initiated request would
-// have no second chance if it lost that race.
+// window.adsk isn't guaranteed to exist the instant this script runs -- if
+// sendToFusion no-ops here there is no second chance, so retry (matching the
+// pattern used elsewhere in the fleet, e.g. LucysShapeForge's
+// requestShapeList) until the bridge is actually ready.
+function requestInitData(retriesLeft = 40) {
+    if (window.adsk && typeof window.adsk.fusionSendData === 'function') {
+        sendToFusion('get_init_data');
+        return;
+    }
+    if (retriesLeft <= 0) return;
+    window.setTimeout(function () {
+        requestInitData(retriesLeft - 1);
+    }, 250);
+}
+requestInitData();
 
 window.fusionJavaScriptHandler = {
     handle: function(action, data) {

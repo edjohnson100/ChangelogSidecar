@@ -31,19 +31,6 @@ def _read_manifest_version():
 
 ADDIN_VERSION = _read_manifest_version()
 
-def _send_init_data(palette):
-    # Pushed proactively by Python right after the palette/handler is set up
-    # (see ShowPaletteHandler), rather than waiting for the HTML to request
-    # it -- the HTML's script starts running as soon as ui.palettes.add()
-    # loads the page, which can race ahead of incomingFromHTML.add() a few
-    # lines later. A one-shot HTML-initiated request has no second chance if
-    # it loses that race; a proactive push from the Python side that already
-    # knows the handler is registered does not have this failure mode.
-    palette.sendInfoToHTML('init_data', json.dumps({
-        'addin_version': ADDIN_VERSION,
-        'imported_themes': load_imported_themes()
-    }))
-
 # Host-side store for user-imported themes -- separate from the built-in
 # Light/Dark/Sepia themes baked into changelog_ui.html. Per-machine, gitignored
 # (same pattern as LiveUtilities/GridfinityGeneratorPlus's imported_themes.json):
@@ -261,10 +248,6 @@ class ShowPaletteHandler(adsk.core.CommandCreatedEventHandler):
             else:
                 _palette.htmlFileURL = url
 
-            # Reloading htmlFileURL re-runs the page's script from scratch
-            # too, so this has to happen on both branches, not just creation.
-            _send_init_data(_palette)
-
             _palette.isVisible = True
 
         except:
@@ -295,11 +278,11 @@ class PaletteHtmlEventHandler(adsk.core.HTMLEventHandler):
                 export_log_logic()
 
             elif action == 'get_init_data':
-                # No longer relied on for the initial load (Python pushes
-                # proactively now -- see ShowPaletteHandler), kept as a
-                # harmless manual re-fetch entry point.
                 if _palette:
-                    _send_init_data(_palette)
+                    _palette.sendInfoToHTML('init_data', json.dumps({
+                        'addin_version': ADDIN_VERSION,
+                        'imported_themes': load_imported_themes()
+                    }))
 
             elif action == 'export_theme':
                 export_theme_logic(htmlArgs.get('content'), htmlArgs.get('default_name'))
