@@ -3,7 +3,7 @@
 
 **Author:** Ed Johnson (Making With An EdJ)
 
-**A persistent design journal for Autodesk Fusion.**
+**Persistent changelog and milestone utility for tracking design history. Includes a live 'Sidecar' browser dashboard with auto-refresh, milestone creation, and text export.**
 
 <img src="ChangelogSidecarAppIcon.png" alt="App Icon" width="300">
 
