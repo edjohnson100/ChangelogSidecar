@@ -1,5 +1,5 @@
 # Changelog Sidecar
-**Version:** 1.2.1
+**Version:** 1.2.0
 
 **Author:** Ed Johnson (Making With An EdJ)
 

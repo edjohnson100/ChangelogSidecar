@@ -1,10 +1,5 @@
 # Changelog
 
-## [1.2.1] - 2026-07-31
-
-### Fixed
-- The header version number could fail to appear if Fusion's HTML bridge wasn't ready the instant the palette script ran — there was no retry, so a slow-to-initialize bridge meant the tag stayed blank for the rest of that session. The startup request now retries (matching the pattern used elsewhere in the fleet) until the bridge is actually available.
-
 ## [1.2.0] - 2026-07-31
 
 ### Added
@@ -18,6 +13,7 @@
 ### Fixed
 - Corrected a README typo that referenced the wrong add-in name in the support section.
 - The Sidecar Dashboard's dark-mode toggle and a couple of styles used hardcoded colors instead of the theme system; now consistent with the palette.
+- The header version number could fail to appear if Fusion's HTML bridge wasn't ready the instant the palette script ran — there was no retry, so a slow-to-initialize bridge meant the tag stayed blank for the rest of that session. The startup request now retries until the bridge is actually available.
 
 ## [1.0.0] - 2025-11-25
 Initial release.
