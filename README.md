@@ -1,5 +1,5 @@
 # Changelog Sidecar
-**Version:** 1.2.0
+**Version:** 1.3.0
 
 **Author:** Ed Johnson (Making With An EdJ)
 
@@ -20,11 +20,11 @@ Fusion’s built-in version comments are great for the "What," but they don't gi
 * **Data Locality:** Your logs are stored as attributes *inside* the Fusion design file. If you share the file, the history travels with it. *(Note: The recipient must also have Changelog Sidecar installed to view the history).*
 
 ---
-## ✨ What's New in v1.2.0
+## ✨ What's New in v1.3.0
 
-* **Theme Manager:** Swap the old dark-mode toggle for a full Light/Dark/Sepia dropdown, with `.theme.json` import/export and a handful of ready-made presets to try.
-* **The palette remembers where you left it:** Size, position, and docking state now persist across Fusion restarts.
-* **Simpler installs:** Distribution moved from built installer packages to a plain zip download — see Installation below.
+* **Themes tab:** The palette is now split into two tabs — **Changelog** (your entries and utilities) and **Themes** (the full Theme Manager).
+* **Font controls:** Pick a Font Family and Base Font Size for the palette, right from the Themes tab.
+* **Full theme-bundle import/export:** Share a complete `style.css` of built-in and custom themes at once, in addition to the existing single-theme `.theme.json` import/export.
 
 *For older release notes, please see the **[CHANGELOG](CHANGELOG.md)**.*
 
@@ -57,10 +57,13 @@ Download the zip file using the green `Code` button above or simply click this l
 When you click the **Changelog Sidecar** command, a palette window opens. This is your "Controller." You can dock it to the side of your screen or leave it floating — it'll remember where you put it.
 
 * **Open Log Dashboard:** Launches the "Sidecar"—a browser window that displays your full history.
-* **Theme Manager:** Located at the top of the palette. Pick **Light**, **Dark**, or **Sepia** from the dropdown, or build your own:
-    * **Import (⬆) / Export (⬇):** Load a `.theme.json` file someone shared with you, or export your current theme (built-in or custom) to share or back up.
-    * **Remove Selected Theme (✕):** Deletes an imported custom theme. Only enabled when a custom theme is selected—the built-in Light/Dark/Sepia themes can't be removed.
-    * **Factory Reset Theme Cache:** Wipes all imported custom themes and reverts to Light, in case things get cluttered.
+* **Changelog / Themes tabs:** The palette is split into two tabs. **Changelog** holds your entries and utilities (below); **Themes** holds the full Theme Manager.
+* **Theme Manager (Themes tab):** Pick **Light**, **Dark**, or **Sepia** from the dropdown in the header, or build your own:
+    * **Font Family / Base Font Size:** Adjust the palette's font per theme.
+    * **Import style.css / Export style.css:** Load or share a full bundle of themes (built-in and custom) in one file.
+    * **Import .json / Export .json:** Load a single `.theme.json` file someone shared with you, or export your current theme (built-in or custom) to share or back up.
+    * **Remove Selected Theme:** Deletes an imported custom theme. Only enabled when a custom theme is selected—the built-in Light/Dark/Sepia themes can't be removed.
+    * **Factory Reset Theme Cache:** Wipes all imported custom themes and font overrides, reverting to the shipped defaults, in case things get cluttered.
     * A handful of ready-made presets (Classic Light/Dark, EdJ Dark, Gruvbox Light, Hacker, Hot Pink) ship in `resources/themes/`—import any of them to try a look before designing your own.
 * **New Entry:** Type your notes here. Be verbose! Explain *why* you are making changes.
     * **Autosave Design Checkbox:** Checked by default. When checked, adding an entry will automatically save the current Fusion design (creating a new version) to ensure the log is permanently attached.

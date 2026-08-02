@@ -118,10 +118,13 @@ def _restore_palette_geometry(palette):
     except RuntimeError:
         pass
 
-def export_theme_logic(content, default_name):
+def export_theme_logic(file_type, content, default_name):
     fileDialog = ui.createFileDialog()
     fileDialog.title = 'Export Theme'
-    fileDialog.filter = 'JSON Files (*.json);;All Files (*.*)'
+    if file_type == 'css':
+        fileDialog.filter = 'CSS Files (*.css);;All Files (*.*)'
+    else:
+        fileDialog.filter = 'JSON Files (*.json);;All Files (*.*)'
     fileDialog.initialDirectory = _themes_dialog_dir()
     fileDialog.initialFilename = default_name
     if fileDialog.showSave() == adsk.core.DialogResults.DialogOK:
@@ -132,15 +135,19 @@ def export_theme_logic(content, default_name):
         except Exception as e:
             ui.messageBox(f'Failed to save theme:\n{str(e)}')
 
-def import_theme_logic():
+def import_theme_logic(file_type):
     fileDialog = ui.createFileDialog()
     fileDialog.title = 'Import Theme'
-    fileDialog.filter = 'JSON Files (*.json);;All Files (*.*)'
+    if file_type == 'css':
+        fileDialog.filter = 'CSS Files (*.css);;All Files (*.*)'
+    else:
+        fileDialog.filter = 'JSON Files (*.json);;All Files (*.*)'
     fileDialog.initialDirectory = _themes_dialog_dir()
     if fileDialog.showOpen() == adsk.core.DialogResults.DialogOK:
         try:
             with open(fileDialog.filename, 'r', encoding='utf-8') as f:
-                return f.read()
+                content = f.read()
+            return json.dumps({'file_type': file_type, 'content': content})
         except Exception as e:
             ui.messageBox(f'Failed to read theme:\n{str(e)}')
     return None
@@ -285,12 +292,12 @@ class PaletteHtmlEventHandler(adsk.core.HTMLEventHandler):
                     }))
 
             elif action == 'export_theme':
-                export_theme_logic(htmlArgs.get('content'), htmlArgs.get('default_name'))
+                export_theme_logic(htmlArgs.get('file_type', 'json'), htmlArgs.get('content'), htmlArgs.get('default_name'))
 
             elif action == 'import_theme':
-                content = import_theme_logic()
-                if content and _palette:
-                    _palette.sendInfoToHTML('theme_imported', json.dumps({'content': content}))
+                payload = import_theme_logic(htmlArgs.get('file_type', 'json'))
+                if payload and _palette:
+                    _palette.sendInfoToHTML('theme_imported', payload)
 
             elif action == 'save_imported_theme':
                 theme_id = htmlArgs.get('id')

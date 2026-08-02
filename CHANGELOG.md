@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.3.0] - 2026-08-01
+
+### Added
+- **Themes tab:** the palette now has two tabs, **Changelog** and **Themes** — Theme Manager moved into its own tab instead of living at the top of the palette.
+- **Font controls:** choose a Font Family (sans-serif, serif, or monospace) and Base Font Size, per theme, from the Themes tab.
+- **Full `style.css`-bundle import/export**, alongside the existing single-theme `.theme.json` import/export — share a complete set of themes (built-ins plus customs) in one file.
+
+### Changed
+- Redesigned palette header: title and version number now stack, with the theme dropdown moved to the top-right corner.
+- Added a version footer at the bottom of the palette, visible on both tabs.
+
 ## [1.2.0] - 2026-07-31
 
 ### Added

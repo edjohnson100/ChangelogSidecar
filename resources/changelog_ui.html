@@ -5,48 +5,89 @@
 </head>
 <body>
 
-    <div class="header-row" style="justify-content: space-between;">
-        <h2 class="app-title">Changelog Sidecar<span id="versionTag" class="version-tag"></span></h2>
-    </div>
-
-    <div class="theme-manager-row">
-        <select id="themeSelector" onchange="changeTheme()">
+    <div class="header">
+        <div>
+            <h2>Changelog Sidecar</h2>
+            <div id="versionTag" class="sub-header"></div>
+        </div>
+        <select id="themeSelector" onchange="changeTheme()" style="width: auto; height: 28px; font-size: 11px; padding: 2px 5px;">
             <option value="light">Light</option>
             <option value="dark">Dark</option>
             <option value="sepia">Sepia</option>
         </select>
-        <button class="icon-btn" title="Import theme (.theme.json)" onclick="requestImportTheme()">⬆</button>
-        <button class="icon-btn" title="Export current theme" onclick="requestExportTheme()">⬇</button>
-        <button class="icon-btn" id="themeRemoveBtn" title="Select a custom (imported) theme to enable" onclick="removeSelectedTheme()" disabled>✕</button>
-    </div>
-    <div class="theme-reset-row">
-        <span class="factory-reset-link" onclick="resetThemeCache()">Factory Reset Theme Cache</span>
     </div>
 
-    <button class="view-log" onclick="openDashboard()">📂 OPEN LOG DASHBOARD</button>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('tab-changelog', event)">Changelog</button>
+        <button class="tab-btn" onclick="switchTab('tab-themes', event)">Themes</button>
+    </div>
 
-    <div class="section-box">
-        <label>Add Log Entry:</label>
-        <textarea id="newEntryText" placeholder="What did you change?"></textarea>
+    <div id="tab-changelog" class="tab-content active">
+        <button class="view-log" onclick="openDashboard()">📂 OPEN LOG DASHBOARD</button>
 
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <div>
-                <input type="checkbox" id="autosaveCheck" checked> <label for="autosaveCheck" style="display:inline; font-weight:normal; cursor:pointer;">Autosave Design</label>
+        <div class="section-box">
+            <label>Add Log Entry:</label>
+            <textarea id="newEntryText" placeholder="What did you change?"></textarea>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <div>
+                    <input type="checkbox" id="autosaveCheck" checked> <label for="autosaveCheck" style="display:inline; font-weight:normal; cursor:pointer;">Autosave Design</label>
+                </div>
+            </div>
+            <button onclick="sendEntry()">Save Entry</button>
+        </div>
+
+        <div style="margin-top:20px;">
+            <h4 style="font-size:12px; text-transform:uppercase; color:var(--text-sub);">Utilities</h4>
+
+            <div style="margin-bottom: 10px;">
+                <input type="text" id="milestoneReason" placeholder="Milestone Name (e.g. 'Final Draft')" style="width:100%; margin-bottom:5px; padding:6px; box-sizing:border-box;">
+                <button class="secondary" onclick="createMilestone()">Archive & Start New Log</button>
+            </div>
+
+            <button class="secondary" onclick="exportLog()">Export to Text File</button>
+        </div>
+    </div>
+
+    <div id="tab-themes" class="tab-content">
+        <div class="section" id="sec-theme-manager">
+            <div class="section-header" onclick="toggleSection('sec-theme-manager')">
+                <h3>Theme Manager</h3>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="section-content data-container">
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <div style="flex: 1;">
+                        <label>Font Family</label>
+                        <select id="fontFamilySelector" onchange="updateActiveThemeProperty('--font-family', this.value)">
+                            <option value="'Segoe UI', Tahoma, sans-serif">Sans-serif</option>
+                            <option value="Georgia, 'Times New Roman', Times, serif">Serif</option>
+                            <option value="'Consolas', 'Courier New', monospace">Monospace</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Base Font Size</label>
+                        <select id="fontSizeSelector" onchange="updateActiveThemeProperty('--font-size-base', this.value)">
+                            <option value="11px">11px</option><option value="12px">12px</option><option value="13px">13px</option>
+                            <option value="14px">14px</option><option value="15px">15px</option><option value="16px">16px</option>
+                            <option value="17px">17px</option><option value="18px">18px</option>
+                        </select>
+                    </div>
+                </div>
+                <p style="font-size:12px; color:var(--text-sub); margin: 0 0 10px 0;">Import custom themes via a JSON theme export or a full style.css bundle.</p>
+                <div class="create-grid">
+                    <button onclick="requestImport('css')">📥 Import style.css</button>
+                    <button onclick="requestExport('css')">📤 Export style.css</button>
+                    <button class="secondary" onclick="requestImport('json')">📂 Import .json</button>
+                    <button class="secondary" onclick="requestExport('json')">💾 Export .json</button>
+                    <button id="themeRemoveBtn" class="secondary full-width" onclick="removeSelectedTheme()" disabled title="Select a custom (imported) theme to enable">🗑️ Remove Selected Theme</button>
+                    <button class="secondary full-width" onclick="resetThemeCache()">🗑️ Factory Reset Theme Cache</button>
+                </div>
             </div>
         </div>
-        <button onclick="sendEntry()">Save Entry</button>
     </div>
 
-    <div style="margin-top:20px;">
-        <h4 style="font-size:12px; text-transform:uppercase; color:var(--text-sub);">Utilities</h4>
-
-        <div style="margin-bottom: 10px;">
-            <input type="text" id="milestoneReason" placeholder="Milestone Name (e.g. 'Final Draft')" style="width:100%; margin-bottom:5px; padding:6px; box-sizing:border-box;">
-            <button class="secondary" onclick="createMilestone()">Archive & Start New Log</button>
-        </div>
-
-        <button class="secondary" onclick="exportLog()">Export to Text File</button>
-    </div>
+    <div class="version-footer">Changelog Sidecar<br><span id="footerVersionTag"></span>, August 2026</div>
 
     <script src="changelog_ui.js"></script>
 </body>
