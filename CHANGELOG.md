@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.2] - 2026-08-08
+
+### Fixed
+- **Accessibility: Font Family / Base Font Size controls weren't reaching every element.** Buttons, text inputs, the header theme dropdown, the Theme Manager's own Font Family/Base Font Size selectors, and the footer kept their hardcoded font instead of tracking the Theme Manager's Font Family/Base Font Size choices — a browser default where form controls don't inherit font settings from the page. Added explicit `font-family`/`font-size` inheritance to every affected element, and converted a few remaining hardcoded pixel sizes (including one inline style that was silently overriding the stylesheet) to scale relative to the Base Font Size setting.
+
 ## [1.3.1] - 2026-08-07
 
 ### Fixed
