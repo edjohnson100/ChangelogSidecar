@@ -35,6 +35,11 @@
     --status-error-text: #721c24;
     --status-info-bg: #cce5ff;
     --status-info-text: #004085;
+    --btn-primary-text: #000000;
+    --btn-success-text: #000000;
+    --focus-ring: #0078d4;
+    --text-danger: #721c24;
+    --overlay-bg: rgba(0, 0, 0, 0.6);
 }
 
 /* DARK MODE OVERRIDES */
@@ -69,6 +74,10 @@
     --status-error-text: #f8d7da;
     --status-info-bg: #1d364d;
     --status-info-text: #cce5ff;
+    --btn-primary-text: #ffffff;
+    --btn-success-text: #ffffff;
+    --focus-ring: #4cc9f0;
+    --text-danger: #f8d7da;
 }
 
 /* SEPIA OVERRIDES */
@@ -103,6 +112,10 @@
     --status-error-text: #7a3527;
     --status-info-bg: #dce6ee;
     --status-info-text: #35526b;
+    --btn-primary-text: #000000;
+    --btn-success-text: #ffffff;
+    --focus-ring: #0078d4;
+    --text-danger: #7a3527;
 }
 
 body {
@@ -163,13 +176,13 @@ input[type="text"] {
 }
 
 /* Buttons */
-button { padding: 10px; width: 100%; cursor: pointer; background: var(--btn-primary); color: white; border: none; border-radius: 4px; margin-bottom: 5px; font-weight: bold; font-size: 14px; transition: background 0.2s; }
+button { padding: 10px; width: 100%; cursor: pointer; background: var(--btn-primary); color: var(--btn-primary-text, white); border: none; border-radius: 4px; margin-bottom: 5px; font-weight: bold; font-size: 14px; transition: background 0.2s; }
 button:hover { background: var(--btn-primary-hover); }
 
 button.secondary { background: var(--btn-secondary); color: var(--btn-secondary-text); font-size: 12px; padding: 8px; }
 button.secondary:hover { background: var(--btn-secondary-hover); }
 
-button.view-log { background: var(--btn-success); margin-bottom: 15px; border-bottom: 3px solid var(--btn-success-hover); }
+button.view-log { background: var(--btn-success); color: var(--btn-success-text, white); margin-bottom: 15px; border-bottom: 3px solid var(--btn-success-hover); }
 button.view-log:hover { background: var(--btn-success-hover); }
 
 label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--text-sub); }
@@ -203,6 +216,16 @@ h4 { margin: 5px 0 10px 0; color: var(--text-main); }
 .create-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .full-width { grid-column: span 2; }
 .data-container button { margin-bottom: 0; }
+
+/* ACCESSIBILITY: visible keyboard-only focus (not on mouse click) */
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+.section-header:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+}
 
 /* FOOTER */
 .version-footer {

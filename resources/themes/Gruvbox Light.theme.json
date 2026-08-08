@@ -32,6 +32,11 @@
     "--status-error-bg": "#ebdbb2",
     "--status-error-text": "#9d0006",
     "--status-info-bg": "#ebdbb2",
-    "--status-info-text": "#076678"
+    "--status-info-text": "#076678",
+    "--btn-primary-text": "#ffffff",
+    "--btn-success-text": "#ffffff",
+    "--focus-ring": "#076678",
+    "--text-danger": "#9d0006",
+    "--overlay-bg": "rgba(0, 0, 0, 0.6)"
   }
 }

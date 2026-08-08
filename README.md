@@ -1,5 +1,5 @@
 # Changelog Sidecar
-**Version:** 1.3.0
+**Version:** 1.3.1
 
 **Author:** Ed Johnson (Making With An EdJ)
 
@@ -20,11 +20,9 @@ Fusion’s built-in version comments are great for the "What," but they don't gi
 * **Data Locality:** Your logs are stored as attributes *inside* the Fusion design file. If you share the file, the history travels with it. *(Note: The recipient must also have Changelog Sidecar installed to view the history).*
 
 ---
-## ✨ What's New in v1.3.0
+## ✨ What's New in v1.3.1
 
-* **Themes tab:** The palette is now split into two tabs — **Changelog** (your entries and utilities) and **Themes** (the full Theme Manager).
-* **Font controls:** Pick a Font Family and Base Font Size for the palette, right from the Themes tab.
-* **Full theme-bundle import/export:** Share a complete `style.css` of built-in and custom themes at once, in addition to the existing single-theme `.theme.json` import/export.
+* **Accessibility pass:** button text now uses theme-aware contrast (no more hardcoded white-on-button), every interactive control in the palette shows a visible keyboard focus ring, and the Theme Manager section can now be opened/closed with the keyboard, not just a mouse click.
 
 *For older release notes, please see the **[CHANGELOG](CHANGELOG.md)**.*
 

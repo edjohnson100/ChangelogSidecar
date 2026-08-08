@@ -38,12 +38,13 @@ const THEME_VARS = [
     '--input-bg', '--input-border', '--input-text', '--input-placeholder',
     '--toggle-bg', '--header-hover',
     '--tab-bg', '--tab-active-bg', '--tab-text', '--tab-active-text',
-    '--btn-primary', '--btn-primary-hover',
-    '--btn-success', '--btn-success-hover',
+    '--btn-primary', '--btn-primary-hover', '--btn-primary-text',
+    '--btn-success', '--btn-success-hover', '--btn-success-text',
     '--btn-secondary', '--btn-secondary-hover', '--btn-secondary-text',
     '--status-success-bg', '--status-success-text',
     '--status-error-bg', '--status-error-text',
-    '--status-info-bg', '--status-info-text'
+    '--status-info-bg', '--status-info-text',
+    '--focus-ring', '--text-danger', '--overlay-bg'
 ];
 const builtInThemeIds = new Set(['light', 'dark', 'sepia']);
 let customThemes = JSON.parse(localStorage.getItem('cls_custom_themes') || '{}');
@@ -124,7 +125,10 @@ function updateActiveThemeProperty(prop, value) {
 }
 
 function toggleSection(id) {
-    document.getElementById(id).classList.toggle('collapsed');
+    const section = document.getElementById(id);
+    section.classList.toggle('collapsed');
+    const header = section.querySelector('.section-header');
+    if (header) header.setAttribute('aria-expanded', !section.classList.contains('collapsed'));
 }
 
 function switchTab(tabId, event) {

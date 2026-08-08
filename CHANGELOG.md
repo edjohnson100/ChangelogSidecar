@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1] - 2026-08-07
+
+### Fixed
+- **Accessibility: button text contrast.** Button foreground colors were hardcoded to white; several theme/button combinations (e.g. the default Light theme's blue "Save Entry" button, the green "Open Log Dashboard" button, and the Hot Pink preset) failed WCAG AA contrast. Button text now goes through a `--btn-primary-text`/`--btn-success-text` variable computed per theme, so it switches to dark text where the background is too light for white to stay readable.
+- **Accessibility: keyboard focus.** Every interactive control in the palette (buttons, the theme dropdown, inputs, the Theme Manager's collapsible header) now shows a visible focus ring when navigated to with the keyboard, and the Theme Manager section header — previously mouse-only — can now be opened and closed with Enter/Space.
+- Added the underlying `--focus-ring`, `--text-danger`, and `--overlay-bg` variables (and the two button-text variables above) to all three built-in themes and all six shipped `.theme.json` presets, so imported themes carry correct, theme-specific contrast values instead of silently falling back to a default that may not fit their accent color.
+
 ## [1.3.0] - 2026-08-01
 
 ### Added

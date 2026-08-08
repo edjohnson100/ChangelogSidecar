@@ -51,7 +51,7 @@
 
     <div id="tab-themes" class="tab-content">
         <div class="section" id="sec-theme-manager">
-            <div class="section-header" onclick="toggleSection('sec-theme-manager')">
+            <div class="section-header" tabindex="0" role="button" aria-expanded="true" onclick="toggleSection('sec-theme-manager')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('sec-theme-manager');}">
                 <h3>Theme Manager</h3>
                 <span class="arrow">▼</span>
             </div>
